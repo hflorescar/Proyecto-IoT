@@ -1,0 +1,106 @@
+// Importar bibliotecas necesarias
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <SPI.h>
+#include <MFRC522.h>
+const int pinRST = 15;  // Pin RST del módulo RC522
+const int pinSDA = 5; // pin SDA del módulo RC522
+const int buzzer = 27;
+const int led = 2;//Led onboard del esp32
+MFRC522 rfid(pinSDA, pinRST);
+String urlCaracteres;
+// Establezca su nombre y contraseña de wifi
+const char* ssid = "Tu_red_wifi";
+const char* password = "Tu_clave_wifi";
+// La URL de tu canal de thingspeak con el número de api_key
+String nombreServidor = "https://api.thingspeak.com/update?api_key=TU_API_KEY";
+void setup() {
+  pinMode(buzzer, OUTPUT);
+  pinMode(led, OUTPUT);
+  SPI.begin();
+  rfid.PCD_Init();//Inicilializar lector
+  Serial.begin(9600); // Velocidad del terminal serial
+  WiFi.begin(ssid, password); // Intenta conectarte a wifi con nuestra contraseña
+  Serial.println("Conectando"); // Imprime nuestro estado en el monitor de serie
+  // Espera a que se conecte el wifi
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Conectado a la red WiFi con la dirección IP: ");
+  Serial.println(WiFi.localIP());
+ //Dos bip indican que se conectó el dispositivo a la red wifi
+  bip(100);
+  delay(400);
+  bip(100);
+}
+void loop() {
+  if (rfid.PICC_IsNewCardPresent())  // Hay una nueva tarjeta presente
+  {
+    if (rfid.PICC_ReadCardSerial())  // Leemos el contenido de la tarjeta
+    {
+      Serial.println("UID de la tarjeta:");
+      for (byte i = 0; i < rfid.uid.size; i++)
+      {
+urlCaracteres += rfid.uid.uidByte[i];
+      }
+Serial.print(urlCaracteres);
+Serial.println();
+if(urlCaracteres=="128115470" || urlCaracteres=="19712918253"){//Estas son las dos tarjeta registradas
+
+if(urlCaracteres=="128115470"){
+ bip(30);
+  urlCaracteres="50";
+  Serial.println("ID 50");
+}
+if(urlCaracteres=="19712918253"){
+ bip(30);
+  urlCaracteres="100";
+  Serial.println("ID 100");
+  
+}
+Serial.println("Tarjeta Correcta");
+digitalWrite(led, HIGH);
+
+if(WiFi.status()== WL_CONNECTED){ // Comprueba que la wifi todavía esté conectada
+HTTPClient http; // Inicializar nuestro cliente HTTP
+  String url = nombreServidor + "&field1=" + urlCaracteres ; // Definir nuestra URL completa    
+  http.begin(url.c_str()); // Inicializa nuestra solicitud HTTP     
+  int codigoRespuestaHTTP = http.GET(); // Enviar solicitud HTTP   
+  if (codigoRespuestaHTTP > 0){ // Verifica que haya código de estado HTTP correcto
+    Serial.print("Codigo de respuesta HTTP: ");
+    Serial.println(codigoRespuestaHTTP);
+    digitalWrite(led, LOW);
+  }else{
+    Serial.print("Codigo de error: ");
+    Serial.println(codigoRespuestaHTTP);
+//Reintentamos una vez más por si hubo un error en la comunicación
+    http.begin(url.c_str()); // Inicializa nuestra solicitud HTTP      
+  int codigoRespuestaHTTP = http.GET(); // Enviar solicitud HTTP     
+  if (codigoRespuestaHTTP > 0){ // Verifica que haya código de estado HTTP correcto
+    Serial.print("Codigo de respuesta HTTP: ");
+    Serial.println(codigoRespuestaHTTP);
+  }
+  }
+  http.end();   
+    }
+    else {
+      Serial.println("WiFi desconectado");
+    }
+}else
+{
+Serial.println("Acceso denegado");
+bip(750);
+delay(1250);
+  }
+ }
+}
+urlCaracteres=""; 
+}
+//Sonido del buzzer
+void bip(int demora){
+digitalWrite(buzzer, HIGH);
+delay(demora);
+digitalWrite(buzzer, LOW);  
+  }
