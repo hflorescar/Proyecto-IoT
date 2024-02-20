@@ -13,7 +13,8 @@ void setup() {
 
 void loop() {
 sensorValue = analogRead(sensorPin);
-if (sensorValue <= 800 || sensorValue >= 3200){Serial.print("Persona detectada");
+if (sensorValue <= 800 || sensorValue >= 3200){
+ Serial.print("Persona detectada");
 presencia = 1;
 } 
 else{
