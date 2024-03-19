@@ -198,19 +198,37 @@ void loop() {
     Serial.print(" with RSSI ");    
     Serial.println(rssi);
 
-   // Dsiplay information
+// Display information
    display.clearDisplay();
    display.setCursor(0,0);
    display.print("LORA RECEIVER");
-   display.setCursor(0,20);
-   display.print("Received packet:");
+   display.setCursor(0,10);
+   display.print("Paquete recibido:");
+   //display.setCursor(0,20);
+   //display.print(LoRaData);
+    display.setCursor(0,20);
+   display.print("Temperatura:");
+   display.setCursor(70,20);
+   display.print(temp);
+   display.setCursor(100,20);
+   display.print("ºC");
    display.setCursor(0,30);
-   display.print(LoRaData);
+   display.print("Humedad:");
+   display.setCursor(70,30);
+   display.print(hum);
+   display.setCursor(100,30);
+   display.print("%");
    display.setCursor(0,40);
+   display.print("Presion:");
+   display.setCursor(70,40);
+   display.print(pres);
+   display.setCursor(100,40);
+   display.print("KPa");
+   display.setCursor(0,50);
    display.print("RSSI:");
-   display.setCursor(30,40);
+   display.setCursor(70,50);
    display.print(rssi);
-   display.display();   
+   display.display();      
    
  }
    //delay(1);
