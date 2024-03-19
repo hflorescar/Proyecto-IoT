@@ -78,7 +78,6 @@ void setup() {
   }
   
   
-
   //reset OLED display via software
   pinMode(OLED_RST, OUTPUT);
   digitalWrite(OLED_RST, LOW);
@@ -136,17 +135,12 @@ void loop() {
   delay(1000);
   
   //Relacionado a la tarjeta 
-  String message = "";
+   String message = "";
   while (MySerial.available()) {
-     message = MySerial.readString();
+    message = MySerial.readString();
   }
 
- if (message.length() > 0) {
-    display.clearDisplay();
-    display.setCursor(0,0);
-    display.println(message);
-    display.display();
-  }
+  
 
   //Mandar datos por Lora
    
@@ -181,7 +175,7 @@ void loop() {
   display.println("LORA SENDER");
   display.setCursor(0,12);
   display.setTextSize(0.5);
-  display.print("LoRa packet sent.");
+  display.print("message");
   display.setCursor(0,22);
   display.setTextSize(0.5);
   display.print("Counter:");
@@ -203,7 +197,7 @@ void loop() {
   display.setCursor(64,45);
   display.print(" %");
 
-    display.setCursor(0,55);
+  display.setCursor(0,55);
   display.print(F("Pres.= "));
   display.setCursor(37,55);
   display.print(pressure_event.pressure);
