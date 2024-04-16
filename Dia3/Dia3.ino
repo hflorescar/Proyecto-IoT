@@ -39,7 +39,7 @@
 #define WIFI_PASSWORD "12345678"
 
   #define INFLUXDB_URL "https://eu-central-1-1.aws.cloud2.influxdata.com"
-  #define INFLUXDB_TOKEN "XRRL3gILOFTTQpvlWEvavHnpaHs_vK_-fEWPUt5aFoe37ORmwXuBAN_AlxEdAb5BU4e8wCj8N6d2ZqLyUIi_pg=="
+  #define INFLUXDB_TOKEN "8xRtCI2owTwGbrTLg_Zf_tJDPzPmr_gebCz2SdjBvt8iGdf0m27s0AnOcsIYDWNc6I7srJNvyUBX79x91ToatA=="
   #define INFLUXDB_ORG "09f459e63b442907"
   #define INFLUXDB_BUCKET "Dia3"
 
@@ -70,7 +70,7 @@ int flagInfluxDB = 0;
   InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
   
   // Declare Data point
-  Point sensor("wifi_status");
+  Point sensor("Datos");
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 
